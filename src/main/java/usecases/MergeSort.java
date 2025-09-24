@@ -2,7 +2,7 @@ package usecases;
 
 import interfaces.Sort;
 
-public class MergeSort implements Sort {
+public final class MergeSort implements Sort {
 
     private void merge(int[] arr, int l, int m, int r) {
 
@@ -46,16 +46,16 @@ public class MergeSort implements Sort {
     }
 
     @Override
-    public void sort(int[] arr, int l, int r) {
+    public void sort(int[] arr, int low, int high) {
 
-        if (l < r) {
+        if (low < high) {
 
-            int m = l + (r - l) / 2;
+            int m = low + (high - low) / 2;
 
-            sort(arr, l, m);
-            sort(arr, m + 1, r);
+            sort(arr, low, m);
+            sort(arr, m + 1, high);
 
-            merge(arr, l, m, r);
+            merge(arr, low, m, high);
         }
     }
 }
