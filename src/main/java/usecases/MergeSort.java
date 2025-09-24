@@ -2,7 +2,7 @@ package usecases;
 
 import interfaces.Sort;
 
-public class MergeSort implements Sort {
+public final class MergeSort implements Sort {
 
     private void merge(int[] arr, int l, int m, int r) {
 
