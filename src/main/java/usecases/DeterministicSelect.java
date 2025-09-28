@@ -1,45 +1,63 @@
 package usecases;
 
 import interfaces.Select;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 
 public final class DeterministicSelect implements Select {
 
+    @Override
     public int select(int[] arr, int k) {
-        if (k > arr.length) throw new IllegalArgumentException();
-        if (arr.length == 0) return Integer.MIN_VALUE;
-        return select(arr, k, 0, arr.length - 1);
+        if (k < 1 || k > arr.length) {
+            throw new IllegalArgumentException("k is out of bounds");
+        }
+        return select(arr, 0, arr.length - 1, k - 1);
     }
 
-    private int select(int[] arr, int k, int start, int end) {
-        var pivot = findPivot(arr, start, end);
-        for (int i = 0; i < arr.length; i++) {
-            if (arr[i] == pivot) swap(arr, i, arr.length - 1);
+    private int select(int[] arr, int start, int end, int kIndex) {
+        if (start == end) return arr[start];
+
+        int pivot = findPivot(arr, start, end);
+
+        int pivotPos = -1;
+        for (int i = start; i <= end; i++) {
+            if (arr[i] == pivot) {
+                pivotPos = i;
+                break;
+            }
         }
-        var pivotIndex = partition(arr, 0, arr.length - 1);
-        if (k == pivotIndex + 1) return arr[pivotIndex];
-        else if (k <= pivotIndex) return select(arr, k, start, pivotIndex - 1);
-        else return select(arr, k, pivotIndex + 1, end);
+        swap(arr, pivotPos, end);
+
+        int pivotIndex = partition(arr, start, end);
+
+        if (kIndex == pivotIndex) {
+            return arr[pivotIndex];
+        } else if (kIndex < pivotIndex) {
+            return select(arr, start, pivotIndex - 1, kIndex);
+        } else {
+            return select(arr, pivotIndex + 1, end, kIndex);
+        }
     }
 
     private int findPivot(int[] arr, int start, int end) {
-        ArrayList<Integer> medians = new ArrayList<>();
-        int length = end + 1 - start;
-        if (length <= 5) return findMedian(Arrays.copyOfRange(arr, start, end + 1), length % 5);
-        int i;
-        for (i = start; end + 1 - i > 5; i += 5) {
-            if (i + 5 > end + 1) {
-                break;
-            }
+        int length = end - start + 1;
+        if (length <= 5) {
+            return findMedian(Arrays.copyOfRange(arr, start, end + 1));
+        }
 
-            int median = findMedian(Arrays.copyOfRange(arr, i, i + 5), 5);
+        ArrayList<Integer> medians = new ArrayList<>();
+        int i = start;
+        for (; i + 4 <= end; i += 5) {
+            int median = findMedian(Arrays.copyOfRange(arr, i, i + 5));
             medians.add(median);
         }
-        if (length % 5 != 0) medians.add(findMedian(Arrays.copyOfRange(arr, i, end + 1), length % 5));
+        if (i <= end) {
+            int median = findMedian(Arrays.copyOfRange(arr, i, end + 1));
+            medians.add(median);
+        }
+
         int[] medianArr = toArray(medians);
-        return findPivot(medianArr, 0, medianArr.length);
+        return findPivot(medianArr, 0, medianArr.length - 1);
     }
 
     private int[] toArray(ArrayList<Integer> list) {
@@ -50,26 +68,27 @@ public final class DeterministicSelect implements Select {
         return arr;
     }
 
-    private int findMedian(int[] arr, int length) {
-        if (arr.length == 1) return arr[0];
+    private int findMedian(int[] arr) {
         Arrays.sort(arr);
-        return arr[length / 2];
+        return arr[arr.length / 2];
     }
 
     private int partition(int[] arr, int start, int end) {
-        int i, b = start - 1;
-        for (i = start; i <= end; i++) {
-            if (arr[i] <= arr[end]) {
-                b++;
-                swap(arr, i, b);
+        int pivot = arr[end];
+        int i = start - 1;
+        for (int j = start; j < end; j++) {
+            if (arr[j] <= pivot) {
+                i++;
+                swap(arr, i, j);
             }
         }
-        return b;
+        swap(arr, i + 1, end);
+        return i + 1;
     }
 
-    private void swap(int[] arr, int index1, int index2) {
-        int inter = arr[index1];
-        arr[index1] = arr[index2];
-        arr[index2] = inter;
+    private void swap(int[] arr, int i, int j) {
+        int tmp = arr[i];
+        arr[i] = arr[j];
+        arr[j] = tmp;
     }
 }
