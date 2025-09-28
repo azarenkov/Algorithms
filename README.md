@@ -17,14 +17,11 @@ Algorithms/
 │   │   │   │   ├── Find.java
 │   │   │   │   ├── Select.java
 │   │   │   │   ├── Sort.java
-│   │   │   ├── algorithms/
-│   │   │   │   ├── sorting/
-│   │   │   │   │   ├── MergeSort.java
-│   │   │   │   │   ├── QuickSort.java
-│   │   │   │   ├── selection/
-│   │   │   │   │   ├── DeterministicSelect.java
-│   │   │   │   ├── geometry/
-│   │   │   │   │   ├── ClosestPair.java
+│   │   │   ├── usecases/
+│   │   │   │   ├── ClosestPair.java
+│   │   │   │   ├── DeterministicSelect.java
+│   │   │   │   ├── MergeSort.java
+│   │   │   │   ├── QuickSort.java
 ```
 
 ## Implemented Algorithms
