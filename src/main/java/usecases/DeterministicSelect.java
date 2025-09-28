@@ -14,11 +14,11 @@ public final class DeterministicSelect implements Select {
     }
 
     private int select(int[] arr, int k, int start, int end) {
-        var pivot = findPivot(arr,start,end);
+        var pivot = findPivot(arr, start, end);
         for (int i = 0; i < arr.length; i++) {
-            if(arr[i] == pivot) swap(arr, i, arr.length - 1);
+            if (arr[i] == pivot) swap(arr, i, arr.length - 1);
         }
-        var pivotIndex = partition(arr, 0,arr.length - 1);
+        var pivotIndex = partition(arr, 0, arr.length - 1);
         if (k == pivotIndex + 1) return arr[pivotIndex];
         else if (k <= pivotIndex) return select(arr, k, start, pivotIndex - 1);
         else return select(arr, k, pivotIndex + 1, end);
@@ -34,12 +34,12 @@ public final class DeterministicSelect implements Select {
                 break;
             }
 
-            int median = findMedian(Arrays.copyOfRange(arr, i, i + 5),5);
+            int median = findMedian(Arrays.copyOfRange(arr, i, i + 5), 5);
             medians.add(median);
         }
-        if (length % 5 != 0) medians.add(findMedian(Arrays.copyOfRange(arr, i, end + 1),length % 5));
+        if (length % 5 != 0) medians.add(findMedian(Arrays.copyOfRange(arr, i, end + 1), length % 5));
         int[] medianArr = toArray(medians);
-        return findPivot(medianArr, 0,medianArr.length);
+        return findPivot(medianArr, 0, medianArr.length);
     }
 
     private int[] toArray(ArrayList<Integer> list) {
@@ -53,7 +53,7 @@ public final class DeterministicSelect implements Select {
     private int findMedian(int[] arr, int length) {
         if (arr.length == 1) return arr[0];
         Arrays.sort(arr);
-        return arr[length/2];
+        return arr[length / 2];
     }
 
     private int partition(int[] arr, int start, int end) {
@@ -61,7 +61,7 @@ public final class DeterministicSelect implements Select {
         for (i = start; i <= end; i++) {
             if (arr[i] <= arr[end]) {
                 b++;
-                swap(arr,i,b);
+                swap(arr, i, b);
             }
         }
         return b;
@@ -72,5 +72,4 @@ public final class DeterministicSelect implements Select {
         arr[index1] = arr[index2];
         arr[index2] = inter;
     }
-
 }
